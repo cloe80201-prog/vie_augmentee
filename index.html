@@ -32,7 +32,7 @@
                 const hint = document.querySelector('#hint');
                 const target = document.querySelector('#target');
 
-                // three.js retire les points des noms (Cube.001 devient Cube001)
+                
                 const clean = s => (s || '').replace(/[.\s]/g, '');
                 const LID = ['Cube001', 'Torus', 'Cube006', 'Cube007', 'Cube008', 'Cube009',
                              'Cube010', 'Cube011', 'Cube012', 'Cube013', 'Cylinder'];
@@ -41,7 +41,7 @@
                 let lidGroup, ribbonGroup;
                 let ready = false, opened = false;
 
-                // Quand le modèle est chargé, on range les pièces dans deux groupes animables
+                
                 gift.addEventListener('model-loaded', () => {
                     const root = gift.getObject3D('mesh');
                     root.updateMatrixWorld(true);
@@ -69,7 +69,7 @@
                     if (!opened) hint.textContent = 'Vise le dessin du cadeau avec la caméra';
                 });
 
-                // Appui sur le cadeau 3D
+                
                 gift.addEventListener('click', () => {
                     if (!ready || opened) return;
                     opened = true;
@@ -80,7 +80,7 @@
 
                     const t0 = performance.now();
                     const DURATION = 1100;
-                    const PIVOT = -6.2;   // bas des rubans, dans les unités du modèle
+                    const PIVOT = -6.2;   
                     const SHRINK = 0.9;
                     const ease = t => 1 - Math.pow(1 - t, 3);
 
@@ -100,7 +100,7 @@
                     }
                     requestAnimationFrame(step);
 
-                    // Le montant sort de la boîte
+                   
                     reveal.setAttribute('animation__pop',
                         'property: scale; from: 0 0 0; to: 1 1 1; dur: 700; delay: 700; easing: easeOutBack');
                     reveal.setAttribute('animation__rise',
@@ -136,7 +136,7 @@
                               animation="property: rotation; from: 0 -8 0; to: 0 8 0; dir: alternate; loop: true; dur: 1400; easing: easeInOutSine">
                 </a-gltf-model>
 
-                <!-- Le montant : caché au départ, apparaît à l'ouverture -->
+                
                 <a-entity id="reveal" position="0 0.8 0" scale="0 0 0" look-at="[camera]">
                     <a-plane width="1.5" height="0.8" color="#e63946" opacity="0.92"></a-plane>
                     <a-text value="30 euros" align="center" color="#ffffff"
