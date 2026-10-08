@@ -1,9 +1,71 @@
-<!DOCTYPE html>
-<html lang="fr">
+<!doctype HTML>
+<html>
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
-<body>
-    <h1>test</h1>
+<body style='margin: 0px; overflow: hidden;'>
+    <div id="hint" style="position:fixed;bottom:6%;width:100%;text-align:center;color:#fff;font-family:sans-serif;z-index:10;pointer-events:none;text-shadow:0 1px 4px #000;">
+        Vise le marqueur, puis touche le cadeau 🎁
+    </div>
+
+    <a-scene embedded
+             arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;'
+             vr-mode-ui="enabled: false">
+
+        <a-marker type='barcode' value='6' id="marker">
+
+            <!-- Boîte -->
+            <a-box class="clickable" color="#e63946" width="0.8" height="0.5" depth="0.8" position="0 0.25 0"></a-box>
+            <!-- Ruban vertical sur la boîte -->
+            <a-box class="clickable" color="#ffd166" width="0.12" height="0.5" depth="0.82" position="0 0.25 0"></a-box>
+
+            <!-- Couvercle (groupe qui s'envole) -->
+            <a-entity id="lid" position="0 0.57 0">
+                <a-box class="clickable" color="#c1121f" width="0.9" height="0.14" depth="0.9"></a-box>
+                <a-box class="clickable" color="#ffd166" width="0.12" height="0.15" depth="0.92"></a-box>
+            </a-entity>
+
+            <!-- Montant (caché au départ) -->
+            <a-text id="amount" value="30 euros" align="center" color="#ffffff"
+                    width="4" position="0 0.6 0" rotation="-60 0 0" scale="0 0 0"></a-text>
+            <a-text id="msg" value="Joyeux 30 ans Maxime !" align="center" color="#ffd166"
+                    width="2.5" position="0 0.2 0.7" rotation="-60 0 0" scale="0 0 0"></a-text>
+        </a-marker>
+
+        <!-- Caméra + toucher : le "cursor" transforme le doigt en clic -->
+        <a-entity camera cursor="rayOrigin: mouse" raycaster="objects: .clickable"></a-entity>
+    </a-scene>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const lid = document.querySelector('#lid');
+            const amount = document.querySelector('#amount');
+            const msg = document.querySelector('#msg');
+            let opened = false;
+
+            document.querySelectorAll('.clickable').forEach(el => {
+                el.addEventListener('click', () => {
+                    if (opened) return;
+                    opened = true;
+                    document.querySelector('#hint').style.display = 'none';
+
+                    // Le couvercle s'envole sur le côté
+                    lid.setAttribute('animation__pos',
+                        'property: position; to: 1 1.4 0; dur: 900; easing: easeOutQuad');
+                    lid.setAttribute('animation__rot',
+                        'property: rotation; to: 0 0 -50; dur: 900; easing: easeOutQuad');
+
+                    // Le montant puis le message apparaissent en grossissant
+                    amount.setAttribute('animation__show',
+                        'property: scale; from: 0 0 0; to: 1 1 1; dur: 700; delay: 600; easing: easeOutBack');
+                    msg.setAttribute('animation__show',
+                        'property: scale; from: 0 0 0; to: 1 1 1; dur: 700; delay: 1200; easing: easeOutBack');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
